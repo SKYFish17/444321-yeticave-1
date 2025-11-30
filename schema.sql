@@ -55,6 +55,7 @@ CREATE TABLE bids
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+# TODO: дополнить индексы после добавления запросов
 CREATE INDEX idx_lots_id ON lots (id);
 CREATE INDEX idx_users_id ON users (email);
 CREATE INDEX idx_categories_id ON categories (title);
