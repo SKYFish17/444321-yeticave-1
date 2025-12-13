@@ -57,32 +57,23 @@ function dbGetPrepareStmt(mysqli $link, string $sql, array $data = []): mysqli_s
 /**
  * Получает список всех категорий лотов
  * @param mysqli $link
- * @return array
+ * @return mysqli_result|bool|string
  */
-function getCategories(mysqli $link): array
+function getCategoriesQuery(mysqli $link): mysqli_result|bool|string
 {
     $sql = 'SELECT * FROM categories';
-    $query = mysqli_query($link, $sql);
 
-    if ($query == false) {
-        print('Ошибка MySQL: ' . mysqli_error($link));
-    }
-
-    return mysqli_fetch_all($query, MYSQLI_ASSOC);
+    return mysqli_query($link, $sql);
 }
 
 /**
  * Получает самые новые, открытые лоты
  * @param mysqli $link
- * @return array
+ * @return mysqli_result|bool|string
  */
-function getLots(mysqli $link): array {
+function getLotsQuery(mysqli $link): mysqli_result|bool|string
+{
     $sql = 'SELECT l.title, l.start_price, l.img_url, l.created_at, l.end_date, c.title as category FROM lots l LEFT JOIN categories c ON l.category_id = c.id WHERE l.end_date > NOW() AND l.winner_id IS NULL ORDER BY l.created_at DESC';
-    $query = mysqli_query($link, $sql);
 
-    if ($query == false) {
-        print('Ошибка MySQL: ' . mysqli_error($link));
-    }
-
-    return mysqli_fetch_all($query, MYSQLI_ASSOC);
+    return mysqli_query($link, $sql);
 }
