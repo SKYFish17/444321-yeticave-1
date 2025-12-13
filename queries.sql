@@ -42,10 +42,25 @@ FROM categories;
 /* запрос на получить самых новых, открытых лотов */
 SELECT l.title,
        l.start_price,
+       l.img_url,
+       l.created_at,
+       l.end_date,
+       c.title as category
+FROM lots l
+       LEFT JOIN categories c
+                 ON l.category_id = c.id
+WHERE l.end_date > NOW()
+  AND l.winner_id IS NULL
+ORDER BY l.created_at DESC;
+
+/* запрос на получить самых новых, открытых лотов с актуальной ценой */
+SELECT l.title,
+       l.start_price,
        COALESCE(MAX(b.amount), l.start_price) AS current_price,
        l.img_url,
        l.created_at,
-       c.title as category
+       l.end_date,
+       c.title                                as category
 FROM lots l
        LEFT JOIN categories c
                  ON l.category_id = c.id
@@ -53,7 +68,7 @@ FROM lots l
                  ON l.id = b.lot_id
 WHERE l.end_date > NOW()
   AND l.winner_id IS NULL
-GROUP BY l.id, l.title, l.start_price, l.img_url, l.created_at, c.title
+GROUP BY l.id, l.title, l.start_price, l.img_url, l.created_at, l.end_date, c.title
 ORDER BY l.created_at DESC;
 
 /* запрос показ лота по его ID */
@@ -67,7 +82,9 @@ FROM lots l
 WHERE l.id = 2;
 
 /* запрос на обновление названия лота по его ID */
-UPDATE lots SET title = 'Новое название лота' WHERE id = 1;
+UPDATE lots
+SET title = 'Новое название лота'
+WHERE id = 1;
 
 /* запрос на получиние списка ставок для лота по его идентификатору с сортировкой по дате */
 SELECT l.title,
@@ -75,10 +92,10 @@ SELECT l.title,
        b.amount,
        b.created_at
 FROM bids b
-  LEFT JOIN lots l
-    ON l.id = b.lot_id
-  LEFT JOIN users u
-    ON b.user_id = u.id
+       LEFT JOIN lots l
+                 ON l.id = b.lot_id
+       LEFT JOIN users u
+                 ON b.user_id = u.id
 WHERE l.id = 1
 ORDER BY b.created_at DESC;
 
