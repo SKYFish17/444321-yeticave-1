@@ -51,7 +51,6 @@ CREATE TABLE bids
 );
 
 # TODO: дополнить индексы после добавления запросов
-CREATE INDEX idx_lots_id ON lots (id);
 CREATE INDEX idx_users_email ON users (email);
 CREATE INDEX idx_categories_title ON categories (title);
 # CREATE INDEX idx_lots_active_created ON lots (end_date, winner_id, created_at DESC);
